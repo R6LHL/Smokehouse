@@ -24,7 +24,7 @@ void Tasks::startFiring(void){
 
 //////////////////////////////////////////////////////////////////////////////////////
 void Tasks::checkSmokeSensor(void){
-  if (smoke_sensor.getState()== state::smoke_is_absent) {
+  if (smoke_sensor.getState()== state::sensor_is_opened) {
     OS.SetTask_(startFiring, check_smoke_sensor_delay);
 #ifdef DEBUG_ENABLED    
     Serial.println(F("No smoke in chamber\0"));
