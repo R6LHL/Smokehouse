@@ -4,18 +4,24 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <Potentiometer.h>
+#include <Light_sensor.h>
 
 #include "config.h"
-
-#include "Potentiometer.h"
 
 typedef TaskManager<OS_QUEUE_SIZE> TaskManager_;
 TaskManager_ OS;
 
 DS18B20 inbox_tempC(ONE_WIRE_PIN);
 
-float start_tempC;
-float curr_tempC;
+typedef Potentiometer<ADC_bit_depth> Potentiometer10bit;
+typedef Light_sensor<ADC_bit_depth> Light_sensor10bit;
+
+Potentiometer10bit rpm_regulator(rpm_regulator_pin);
+Light_sensor10bit smoke_sensor(smoke_sensor_digital_pin);
+
+float start_tempC = 0;
+float curr_tempC = 0;
 
 #include "Tasks.h"
 
@@ -44,6 +50,7 @@ void setup() {
   Serial.print(F("Checking start temp...\0"));
   Serial.print(start_tempC);
   Serial.println(F("*C"));
+  Serial.println();
 #endif  //DEBUG_ENABLED
 
   //OS.SetTask_(Tasks::checkTemp, null_delay);
